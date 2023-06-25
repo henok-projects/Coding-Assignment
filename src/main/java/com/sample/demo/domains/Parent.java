@@ -8,11 +8,10 @@ import lombok.Data;
 @AllArgsConstructor
 @Entity
 public class Parent {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "id")
-    private long id;
+    private int id;
 
     @Column(name = "sender")
     private String sender;
