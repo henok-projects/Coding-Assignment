@@ -2,19 +2,22 @@ package com.sample.demo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sample.demo.domains.Child;
 import com.sample.demo.domains.Parent;
 import com.sample.demo.services.ChildService;
 import com.sample.demo.services.ParentService;
+import org.json.simple.JSONObject;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.FileReader;
 import java.util.List;
+
+import static org.json.simple.JSONValue.parse;
 
 @SpringBootApplication
 public class CodingAssignmentApplication {
@@ -22,52 +25,30 @@ public class CodingAssignmentApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CodingAssignmentApplication.class, args);
 	}
-
-
 	@Bean
-	CommandLineRunner runner(ParentService parentService){
+	CommandLineRunner runner(ParentService parentService,ChildService childService){
 		return args -> {
-			// read JSON Array and load json
-			ObjectMapper mapper = new ObjectMapper();
-			TypeReference<List<Parent>> typeReference = new TypeReference<List<Parent>>(){};
-			InputStream inputStream = TypeReference.class.getResourceAsStream("/json/Parent.json");
 
-			ObjectNode node = new ObjectMapper().readValue(inputStream, ObjectNode.class);
-			byte[] bytes = mapper.writeValueAsBytes(node.get("data"));
-			System.out.println("==========>" + node.get("data"));
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
 			try {
-				List<Parent> parentList = mapper.readValue(bytes,typeReference);
-				parentService.saveAll(parentList);
-				System.out.println("Parents Saved!");
-			} catch (IOException e){
-				System.out.println("Unable to save Parents: " + e.getMessage());
-			}
-		};
-	}
 
-	@Bean
-	CommandLineRunner runner2(ChildService childService){
-		return args -> {
-			// read JSON Array and load json
-			ObjectMapper mapper = new ObjectMapper();
-			TypeReference<List<Child>> typeReference = new TypeReference<List<Child>>(){};
-			InputStream inputStream = TypeReference.class.getResourceAsStream("/json/Child.json");
+				String parentData = ((JSONObject)parse(new FileReader("src/main/resources/json/Parent.json"))).get("data").toString();
+				String childData = ((JSONObject)parse(new FileReader("src/main/resources/json/Child.json"))).get("data").toString();
+				List<Parent> parents = mapper.readValue(parentData, new TypeReference<>(){});
+				List<Child> children = mapper.readValue(childData, new TypeReference<>(){});
 
-			ObjectNode node = new ObjectMapper().readValue(inputStream, ObjectNode.class);
-			byte[] bytes = mapper.writeValueAsBytes(node.get("data"));
-			System.out.println("==========>" + node.get("data"));
-
-			try {
-				List<Child> children = mapper.readValue(bytes,typeReference);
+				parentService.saveAll(parents);
 				childService.saveAll(children);
-				System.out.println("children Saved!");
-			} catch (IOException e){
-				System.out.println("Unable to save children: " + e.getMessage());
-			}
-		};
-	}
 
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+
+		};
+
+	}
 
 
 }
