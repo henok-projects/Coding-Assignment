@@ -1,6 +1,7 @@
 package com.sample.demo.services;
 
 import com.sample.demo.domains.Child;
+import com.sample.demo.dto.ChildDTO;
 import com.sample.demo.repositories.ChildRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,9 @@ public class ChildService {
 
     public Iterable<Child> saveAll(List<Child> childList) {
         return childRepository.saveAll(childList);
+    }
+
+    public List<ChildDTO> findChildById(int id) {
+        return childRepository.findChildById(id);
     }
 }
