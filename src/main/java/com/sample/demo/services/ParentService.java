@@ -24,4 +24,10 @@ public class ParentService {
     public Iterable<Parent> saveAll(List<Parent> parents) {
        return parentRepository.saveAll(parents);
     }
+
+    public Iterable<Parent> findAll() {
+        Iterable<Parent> parents =  parentRepository.findAll();
+        return parents;
+    }
+
 }
