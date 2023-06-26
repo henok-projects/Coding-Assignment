@@ -16,9 +16,8 @@ public class ParentController {
         this.parentService = parentService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/parent")
     public ModelAndView list(){
-
         ModelAndView mav = new ModelAndView("index");
         mav.addObject("parents", parentService.list());
         return mav;

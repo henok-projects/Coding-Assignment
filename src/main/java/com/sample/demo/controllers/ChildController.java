@@ -3,10 +3,8 @@ package com.sample.demo.controllers;
 import com.sample.demo.domains.Child;
 import com.sample.demo.dto.ChildDTO;
 import com.sample.demo.services.ChildService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -20,13 +18,16 @@ public class ChildController {
         this.childService = childService;
     }
 
-    @GetMapping("/childList")
-    public Iterable<Child> list(){
-        return childService.list();
+
+    @GetMapping("/child")
+    public ModelAndView list(@RequestParam(defaultValue = "1") String id){
+        ModelAndView mav = new ModelAndView("child");
+        mav.addObject("children", childService.list(Integer.parseInt(id)));
+        return mav;
     }
 
-    @GetMapping("/{id}")
-    public List<ChildDTO> findById(@PathVariable int id){
-        return childService.findChildById(id);
+    @GetMapping("/childList")
+    public List<ChildDTO> list(){
+        return childService.list(Integer.parseInt("1"));
     }
 }

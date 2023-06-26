@@ -17,7 +17,7 @@
 <div class="container">
 
     <br/><br/>
-    <h3>List Parents</h3>
+    <h3>Children</h3>
     <br/><br/>
     <table class="table table-bordered table-striped" id="employeeTable">
 
@@ -27,16 +27,16 @@
             <th>Sender</th>
             <th>Reciver</th>
             <th>Total Amount</th>
-            <th>Total Paid Amount</th>
+            <th>Paid Amount</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="parent: ${parents}">
-            <td th:text="${parent.id}" />
-            <td th:text="${parent.sender}" />
-            <td th:text="${parent.receiver}" />
-            <td th:text="${parent.totalAmount}" />
-            <td th:text="${parent.totalPaidAmount}" />
+        <tr th:each="child: ${children}">
+            <td th:text="${child.id}" />
+            <td th:text="${child.sender}" />
+            <td th:text="${child.receiver}" />
+            <td th:text="${child.totalAmount}" />
+            <td th:text="${child.paidAmount}" />
 
         </tr>
         </tbody>
@@ -48,7 +48,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
 <script>
 
-		</script>
+</script>
 </body>
 
 </html>

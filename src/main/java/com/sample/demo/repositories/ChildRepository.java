@@ -8,8 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ChildRepository extends JpaRepository<Child, Integer> {
-
-    @Query("SELECT new com.sample.demo.dto.CommonDTO(c.id, c.parentId, c.paidAmount, p.sender, p.receiver, p.totalAmount) from Parent p, Child c WHERE p.id = c.parentId")
-    List<ChildDTO> findChildById(int id);
+    @Query(value = "SELECT u FROM Child u where u.parentId=?1")
+    List<Child> getChildren(int parentId);
 
 }
