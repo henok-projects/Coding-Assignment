@@ -1,5 +1,6 @@
 package com.sample.demo;
 
+import com.sample.demo.controllers.ChildController;
 import com.sample.demo.controllers.ParentController;
 import com.sample.demo.domains.Child;
 import com.sample.demo.domains.Parent;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.ModelAndView;
 
 @TestMethodOrder(OrderAnnotation.class)
 @SpringBootTest(classes=ControllerMokitoTests.class)
@@ -34,6 +36,8 @@ public class ControllerMokitoTests {
     @InjectMocks
     ParentController parentController;
 
+    @InjectMocks
+    ChildController childController;
     List<Parent> parents;
 
     List<Child> children;
@@ -50,23 +54,27 @@ public class ControllerMokitoTests {
         parents.add(new Parent(2, "ABCD", "XYZE", 300));
         parents.add(new Parent(3, "ABCD", "XYZF", 400));
 
-        when(parentService.list()).thenReturn(parents); //Moking
+        when(parentService.list()).thenReturn((List<ParentDTO>) parent); //Moking
 
-        ResponseEntity<List<Parent>> res = (ResponseEntity<List<Parent>>) parentController.findAll();
-        assertEquals(HttpStatus.FOUND,res.getStatusCode());
-        assertEquals(2,res.getBody().size());
+        ModelAndView res = parentController.list();
+        assertEquals(HttpStatus.FOUND,res.getStatus());
+        assertEquals(false,res.isEmpty());
 
     }
 
     @Test
-    @Order(2)
-    public void test_getChildById() {
+    @Order(1)
+    public void test_getAllChildren() {
         children = new ArrayList<Child>();
-        children.add(new Child(2, 3, 200));
+        children.add(new Child(1, 2, 200));
+        children.add(new Child(2, 4, 300));
+        children.add(new Child(3, 5, 400));
 
-        int id =2;
-        when(childService.findChildById(id)).thenReturn((List<ChildDTO>) child); //Moking
-        assertEquals(0,childService.findChildById(id).size());
+        when(childService.list()).thenReturn((Iterable<Child>) child); //Moking
+
+        ModelAndView res = (ModelAndView) childController.list();
+        assertEquals(HttpStatus.FOUND,res.getStatus());
+        assertEquals(false,res.isEmpty());
 
     }
 }

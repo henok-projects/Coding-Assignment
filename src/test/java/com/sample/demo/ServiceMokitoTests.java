@@ -31,7 +31,7 @@ public class ServiceMokitoTests {
 
     @Test
     @Order(1)
-    public void test_getAllCountries() {
+    public void test_getAllParents() {
 
         List<Parent> parents= new ArrayList<Parent>();
 
@@ -46,7 +46,7 @@ public class ServiceMokitoTests {
 
     @Test
     @Order(2)
-    public void test_getCountryByName() {
+    public void test_getParentByName() {
 
         List<Parent> parents= new ArrayList<Parent>();
 
